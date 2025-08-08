@@ -8,8 +8,8 @@ export default async function Home() {
   } = await supabase.auth.getSession();
 
   if (session) {
-    redirect('/dashboard');
+    redirect('/home');
   } else {
-    redirect('/auth/login');
+    redirect('/home');
   }
 }

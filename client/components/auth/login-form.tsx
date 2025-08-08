@@ -1,5 +1,6 @@
 'use client';
 
+import { googleIcon } from '@/assets/assets';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
@@ -35,20 +36,19 @@ export function LoginForm() {
       password: '',
     },
   });
-  async function onGoogleLogin()
-  {
-     try {
-      await loginWithGoogle();
-      router.push('/dashboard');
-    } catch (error) {
-      setError(
-        error instanceof Error ? error.message : 'Something Went Wrong'
-      );
-    } finally {
-      setIsLoading(false);
-    }
+  async function onGoogleLogin() {
+  if (isLoading) return; // prevent multiple clicks
 
+  setIsLoading(true);
+  setError(null);
+
+  try {
+    await loginWithGoogle(); // will redirect
+  } catch (error) {
+    setError(error instanceof Error ? error.message : 'Something went wrong');
+    setIsLoading(false); // only reset if there's an error
   }
+}
 
   async function onSubmit(data: FormData) {
     setIsLoading(true);
@@ -124,14 +124,8 @@ export function LoginForm() {
           </Button>
         </form>
       </Form>
-      <Button
-  variant="outline"
-  type="button"
-  className="w-full"
-  onClick={onGoogleLogin}
->
-  Sign in with Google
-</Button>
+      <Button disabled={isLoading} onClick={onGoogleLogin} className='w-full'>{googleIcon}Sign in with Google</Button>
+
 
       <div className="text-center text-sm">
         Don&apos;t have an account?{' '}
