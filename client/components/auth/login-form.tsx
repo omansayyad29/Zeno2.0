@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { login } from '@/lib/utils/auth-helpers';
+import { login, loginWithGoogle } from '@/lib/utils/auth-helpers';
 import { loginSchema } from '@/lib/utils/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
@@ -35,6 +35,20 @@ export function LoginForm() {
       password: '',
     },
   });
+  async function onGoogleLogin()
+  {
+     try {
+      await loginWithGoogle();
+      router.push('/dashboard');
+    } catch (error) {
+      setError(
+        error instanceof Error ? error.message : 'Something Went Wrong'
+      );
+    } finally {
+      setIsLoading(false);
+    }
+
+  }
 
   async function onSubmit(data: FormData) {
     setIsLoading(true);
@@ -110,6 +124,14 @@ export function LoginForm() {
           </Button>
         </form>
       </Form>
+      <Button
+  variant="outline"
+  type="button"
+  className="w-full"
+  onClick={onGoogleLogin}
+>
+  Sign in with Google
+</Button>
 
       <div className="text-center text-sm">
         Don&apos;t have an account?{' '}
